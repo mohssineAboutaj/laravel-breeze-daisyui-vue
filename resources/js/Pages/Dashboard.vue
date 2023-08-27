@@ -1,22 +1,28 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { usePage } from "@inertiajs/vue3";
+
+const title = "Dashboard";
+const page = usePage();
 </script>
 
 <template>
-    <Head title="Dashboard" />
-
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
-        </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">You're logged in!</div>
-                </div>
-            </div>
-        </div>
-    </AuthenticatedLayout>
+  <AuthenticatedLayout :title="title" :full-flex="true">
+    <div class="flex max-w-xl mx-auto gap-4 flex-wrap">
+      <h1 class="my-8 text-5xl mx-auto capitalize">
+        <span>welcome to </span>
+        <span class="text-primary font-bold">
+          {{ page.props.env.title }}
+        </span>
+      </h1>
+      <div class="flex mx-auto">
+        <a
+          :href="route('profile.edit')"
+          class="btn btn-primary btn-lg btn-block"
+        >
+          edit profile
+        </a>
+      </div>
+    </div>
+  </AuthenticatedLayout>
 </template>
