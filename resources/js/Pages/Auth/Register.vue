@@ -1,103 +1,120 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import { Link, useForm } from "@inertiajs/vue3";
 
+// data
+const title = "Register";
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
 });
 
 const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
+  form.post(route("register.store"), {
+    onFinish: () => form.reset("password", "password_confirmation"),
+  });
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Register" />
+  <GuestLayout :title="title" :full-flex="true">
+    <div class="card w-96 bg-neutral text-neutral-content mx-auto">
+      <div class="card-body items-center text-center">
+        <h2 class="card-title">{{ title }}</h2>
+      </div>
+      <form class="card-body" @submit.prevent="submit">
+        <!-- name -->
+        <div class="form-control w-full">
+          <label class="label" for="name">
+            <span class="label-text">Type your name</span>
+          </label>
+          <input
+            autofocus
+            id="name"
+            type="text"
+            placeholder="Type your name"
+            class="input input-bordered w-full"
+            v-model="form.name"
+          />
+          <label class="label">
+            <span class="label-text-alt">{{ form.errors.name }}</span>
+          </label>
+        </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+        <!-- email -->
+        <div class="form-control w-full">
+          <label class="label" for="email">
+            <span class="label-text">Type your email</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Type your email"
+            class="input input-bordered w-full"
+            v-model="form.email"
+          />
+          <label class="label">
+            <span class="label-text-alt">{{ form.errors.email }}</span>
+          </label>
+        </div>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+        <!-- password -->
+        <div class="form-control w-full">
+          <label class="label" for="password">
+            <span class="label-text">Type your password</span>
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Type your password"
+            class="input input-bordered w-full"
+            v-model="form.password"
+          />
+          <label class="label">
+            <span class="label-text-alt">{{ form.errors.password }}</span>
+          </label>
+        </div>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+        <div class="form-control w-full">
+          <label class="label" for="password_confirmation">
+            <span class="label-text">Confirm your password</span>
+          </label>
+          <input
+            id="password_confirmation"
+            type="password"
+            placeholder="Confirm your password"
+            class="input input-bordered w-full"
+            v-model="form.password_confirmation"
+          />
+          <label class="label">
+            <span class="label-text-alt">
+              {{ form.errors.password_confirmation }}
+            </span>
+          </label>
+        </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+        <div class="card-actions">
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            :class="{
+              'btn-disabled': form.processing || form.recentlySuccessful,
+            }"
+          >
+            <span
+              v-if="form.processing || form.recentlySuccessful"
+              class="loading loading-spinner"
+            ></span>
+            <span v-else>Save</span>
+          </button>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+          <Link :href="route('login')" class="btn btn-link btn-block">
+            Already registered?
+          </Link>
+        </div>
+      </form>
+    </div>
+  </GuestLayout>
 </template>

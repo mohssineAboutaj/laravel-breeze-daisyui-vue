@@ -1,61 +1,74 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import { Link, useForm } from "@inertiajs/vue3";
 
 defineProps({
-    status: {
-        type: String,
-    },
+  status: { type: String },
 });
 
+// data
+const title = "Forgot Password";
 const form = useForm({
-    email: '',
+  email: "",
 });
 
 const submit = () => {
-    form.post(route('password.email'));
+  form.post(route("password.email"), {
+    onFinish: () => form.reset("email"),
+  });
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Forgot Password" />
-
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset
-            link that will allow you to choose a new one.
+  <GuestLayout :title="title" :fullFlex="true">
+    <div class="card w-96 bg-neutral text-neutral-content mx-auto">
+      <div class="card-body items-center text-center">
+        <h2 class="card-title">{{ title }}</h2>
+        <p class="mb-4">
+          Forgot your password? No problem. Just let us know your email address
+          and we will email you a password reset link that will allow you to
+          choose a new one.
+        </p>
+      </div>
+      <form class="card-body" @submit.prevent="submit">
+        <!-- email -->
+        <div class="form-control w-full">
+          <label class="label" for="email">
+            <span class="label-text">Type your email</span>
+          </label>
+          <input
+            autofocus
+            id="email"
+            type="email"
+            placeholder="Type your email"
+            class="input input-bordered w-full"
+            v-model="form.email"
+          />
+          <label class="label">
+            <span class="label-text-alt">{{ form.errors.email }}</span>
+          </label>
         </div>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+        <div class="card-actions">
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            :class="{
+              'btn-disabled': form.processing || form.recentlySuccessful,
+            }"
+          >
+            <span
+              v-if="form.processing || form.recentlySuccessful"
+              class="loading loading-spinner"
+            ></span>
+            <span v-else>Save</span>
+          </button>
+
+          <Link :href="route('login')" class="btn btn-link btn-block">
+            Back to login
+          </Link>
         </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+      </form>
+    </div>
+  </GuestLayout>
 </template>

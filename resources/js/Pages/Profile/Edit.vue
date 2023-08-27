@@ -1,46 +1,50 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import DeleteUserForm from './Partials/DeleteUserForm.vue';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head } from '@inertiajs/vue3';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import DeleteUserForm from "./Partials/DeleteUserForm.vue";
+import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
+import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
+import { ref } from "vue";
 
 defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+  mustVerifyEmail: { type: Boolean },
+  status: { type: String },
 });
+
+const title = "Profile";
+
+const tabs = [
+  { label: "Profile Information" },
+  { label: "Update Password" },
+  { label: "Delete Account" },
+];
+const activeTab = ref(0);
 </script>
 
 <template>
-    <Head title="Profile" />
-
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Profile</h2>
-        </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                        class="max-w-xl"
-                    />
-                </div>
-
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <UpdatePasswordForm class="max-w-xl" />
-                </div>
-
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <DeleteUserForm class="max-w-xl" />
-                </div>
-            </div>
+  <AuthenticatedLayout :title="title">
+    <div class="card bg-neutral text-neutral-content mx-auto max-w-lg">
+      <div class="card-body">
+        <div class="tabs flex">
+          <a
+            v-for="(tab, index) in tabs"
+            :key="index"
+            class="tab flex-1 tab-bordered pb-16"
+            :class="{ 'tab-active': activeTab == index }"
+            @click="activeTab = index"
+          >
+            {{ tab.label }}
+          </a>
         </div>
-    </AuthenticatedLayout>
+      </div>
+      <div class="card-body flex gap-y-8">
+        <UpdateProfileInformationForm
+          v-if="activeTab == 0"
+          :must-verify-email="mustVerifyEmail"
+          :status="status"
+        />
+        <UpdatePasswordForm v-if="activeTab == 1" />
+        <DeleteUserForm v-if="activeTab == 2" />
+      </div>
+    </div>
+  </AuthenticatedLayout>
 </template>
