@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, Head } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 
 // props
@@ -11,6 +11,8 @@ defineProps({
 </script>
 
 <template>
+  <Head :title="title" />
+
   <nav class="navbar bg-base-100 fixed">
     <div class="flex-1">
       <Link

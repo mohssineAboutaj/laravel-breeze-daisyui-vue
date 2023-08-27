@@ -1,5 +1,5 @@
 <script setup>
-import { Link, usePage } from "@inertiajs/vue3";
+import { Head, Link, usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { computed } from "vue";
 
@@ -18,6 +18,8 @@ const canRegister = computed(() => page.props.can.register);
 </script>
 
 <template>
+  <Head :title="title" />
+
   <nav class="navbar bg-base-100 fixed">
     <div class="flex-1">
       <Link
